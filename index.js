@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 const csv = require('csvtojson');
 const queryString = require('query-string');
+const ObjectsToCsv = require('objects-to-csv');
 
 const csvFilePath = './input.csv';
 
@@ -21,18 +22,22 @@ const chromeOptions = {
   await page.goto('https://www.walmart.com/help');
 
   for (const element of array) {
+    console.log('0%');
     await page.waitForSelector('button#contact-us');
     await page.click('button#contact-us');
 
+    console.log('5%');
     await page.waitForSelector('[aria-label="An order"]');
     await page.click('[aria-label="An order"]');
 
+    console.log('30%');
     await page.waitForTimeout(4000);
     await page.type('[aria-label="Type a message"]', element.email, {
       delay: 20,
     });
     await page.click('.wc-send');
 
+    console.log('50%');
     await page.waitForTimeout(4000);
     await page.type('[aria-label="Type a message"]', element.fullOrderId, {
       delay: 20,
@@ -41,6 +46,7 @@ const chromeOptions = {
 
     await page.waitForTimeout(10000);
 
+    console.log('80%');
     const status = await page.evaluate(() => {
       const temp = document.querySelector('div:nth-child(8) > p');
       if (temp) {
@@ -93,6 +99,8 @@ const chromeOptions = {
       tracking_id = parsed.tracking_id;
     }
 
+    console.log('100%');
+
     const objectResult = {
       email: element.email,
       fullOrderId: element.fullOrderId,
@@ -107,6 +115,16 @@ const chromeOptions = {
     await page.click('.wc-close-chat-button');
     await page.click('.confirm-close-button');
   }
+
+  (async () => {
+    const csv = new ObjectsToCsv(result);
+
+    // Save to file:
+    await csv.toDisk('./output.csv');
+
+    // Return the CSV file as string:
+    console.log(await csv.toString());
+  })();
 
   await browser.close();
 })();
