@@ -112,19 +112,12 @@ const chromeOptions = {
     console.log(objectResult);
     result.push(objectResult);
 
+    const csv = new ObjectsToCsv(result);
+    // Save to file:
+    await csv.toDisk('./output.csv');
     await page.click('.wc-close-chat-button');
     await page.click('.confirm-close-button');
   }
-
-  (async () => {
-    const csv = new ObjectsToCsv(result);
-
-    // Save to file:
-    await csv.toDisk('./output.csv');
-
-    // Return the CSV file as string:
-    console.log(await csv.toString());
-  })();
 
   await browser.close();
 })();
