@@ -8,6 +8,7 @@ const csvFilePath = './input.csv';
 const chromeOptions = {
   headless: false,
   defaultViewport: null,
+  slowMo: 10,
 };
 
 (async () => {
