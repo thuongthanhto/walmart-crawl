@@ -13,9 +13,6 @@ const chromeOptions = {
 
 (async () => {
   const result = [];
-  let url = '';
-  let tracking_id = '';
-
   const array = await csv().fromFile(csvFilePath);
 
   const browser = await puppeteer.launch(chromeOptions);
@@ -23,6 +20,9 @@ const chromeOptions = {
   await page.goto('https://www.walmart.com/help');
 
   for (const element of array) {
+    let url = '';
+    let tracking_id = '';
+
     console.log('0%');
     await page.waitForSelector('button#contact-us');
     await page.click('button#contact-us');
