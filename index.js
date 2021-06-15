@@ -1,21 +1,22 @@
-const puppeteer = require('puppeteer');
+// puppeteer-extra is a drop-in replacement for puppeteer,
+// it augments the installed puppeteer with plugin functionality
+const puppeteer = require('puppeteer-extra');
+
+// add stealth plugin and use defaults (all evasion techniques)
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const csv = require('csvtojson');
 const queryString = require('query-string');
 const ObjectsToCsv = require('objects-to-csv');
 
 const csvFilePath = './input.csv';
 
-const chromeOptions = {
-  headless: false,
-  defaultViewport: null,
-  slowMo: 10,
-};
+puppeteer.use(StealthPlugin());
 
-(async () => {
+// puppeteer usage as normal
+puppeteer.launch({ headless: false }).then(async (browser) => {
   const result = [];
   const array = await csv().fromFile(csvFilePath);
 
-  const browser = await puppeteer.launch(chromeOptions);
   const page = await browser.newPage();
   await page.goto('https://www.walmart.com/help');
 
@@ -121,4 +122,4 @@ const chromeOptions = {
   }
 
   await browser.close();
-})();
+});
