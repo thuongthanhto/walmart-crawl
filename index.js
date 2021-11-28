@@ -58,11 +58,11 @@ puppeteer.launch({ headless: false }).then(async (browser) => {
       return "";
     });
 
-    await page.click("li:nth-child(1) > button");
+    await page.click('[title="Yes, this is the order"]');
     await page.waitForTimeout(5000);
 
-    if (await page.$("li:nth-child(1) > button")) {
-      await page.click("li:nth-child(1) > button");
+    if (await page.$('[title="Track shipment"]')) {
+      await page.click('[title="Track shipment"]');
 
       const getNewPageWhenLoaded = async () => {
         return new Promise((x) =>
