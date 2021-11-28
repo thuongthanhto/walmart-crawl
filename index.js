@@ -50,7 +50,7 @@ puppeteer.launch({ headless: false }).then(async (browser) => {
 
     console.log("80%");
     const status = await page.evaluate(() => {
-      const temp = document.querySelector("div:nth-child(8) > p");
+      const temp = document.querySelector("div:nth-child(5) > p > strong");
       if (temp) {
         return temp.textContent;
       }
@@ -58,17 +58,11 @@ puppeteer.launch({ headless: false }).then(async (browser) => {
       return "";
     });
 
-    const date = await page.evaluate(() => {
-      const temp = document.querySelector("div:nth-child(11) > p");
-      if (temp) {
-        return temp.textContent;
-      }
+    await page.click("li:nth-child(1) > button");
+    await page.waitForTimeout(5000);
 
-      return "";
-    });
-
-    if (await page.$('[aria-label="View Carrier Tracking"]')) {
-      await page.click('[aria-label="View Carrier Tracking"]');
+    if (await page.$("li:nth-child(1) > button")) {
+      await page.click("li:nth-child(1) > button");
 
       const getNewPageWhenLoaded = async () => {
         return new Promise((x) =>
@@ -108,7 +102,6 @@ puppeteer.launch({ headless: false }).then(async (browser) => {
       fullOrderId: element.fullOrderId,
       status: status,
       url,
-      date,
       tracking_id,
     };
     console.log(objectResult);
